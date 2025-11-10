@@ -1,0 +1,361 @@
+/* Color scheme variables */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-hover: #f5f5f5;
+  --bg-active: #e8e8e8;
+  --bg-drop-target: #e3f2fd;
+  --border-color: #e0e0e0;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --text-tertiary: #999;
+  --icon-stroke: #666;
+  --folder-color: #FFA500;
+  --search-icon-color: #999;
+  --overlay-bg: rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #2d2d2d;
+    --bg-hover: #3a3a3a;
+    --bg-active: #4a4a4a;
+    --bg-drop-target: #1e3a5f;
+    --border-color: #3a3a3a;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-tertiary: #888;
+    --icon-stroke: #b0b0b0;
+    --folder-color: #FFB52E;
+    --search-icon-color: #888;
+    --overlay-bg: rgba(0, 0, 0, 0.7);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.search-container {
+  position: relative;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.search-icon {
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-icon path {
+  stroke: var(--search-icon-color);
+}
+
+#searchInput {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: none;
+  border-radius: 8px;
+  background: var(--bg-primary);
+  font-size: 15px;
+  outline: none;
+  color: var(--text-primary);
+}
+
+#searchInput::placeholder {
+  color: var(--text-tertiary);
+}
+
+#bookmarkTree {
+  padding: 8px 0;
+  overflow-y: auto;
+  height: calc(100vh - 72px);
+}
+
+.bookmark-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  user-select: none;
+}
+
+.bookmark-item:hover {
+  background: var(--bg-hover);
+}
+
+.bookmark-item.selected {
+  background: var(--bg-active);
+}
+
+.folder-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  user-select: none;
+}
+
+.folder-item:hover {
+  background: var(--bg-hover);
+}
+
+.chevron {
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.chevron path {
+  stroke: var(--icon-stroke);
+}
+
+.chevron.expanded {
+  transform: rotate(90deg);
+}
+
+.folder-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.folder-icon path {
+  fill: var(--folder-color);
+}
+
+.bookmark-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 24px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.folder-name,
+.bookmark-name {
+  font-size: 14px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.folder-children {
+  display: none;
+  padding-left: 0;
+}
+
+.folder-children.expanded {
+  display: block;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Context menu */
+.context-menu {
+  position: fixed;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 4px 0;
+  z-index: 10000;
+  min-width: 120px;
+}
+
+.context-menu-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-primary);
+  transition: background 0.15s;
+}
+
+.context-menu-item:hover {
+  background: var(--bg-hover);
+}
+
+/* Drag state */
+.bookmark-item[draggable="true"],
+.folder-item[draggable="true"] {
+  cursor: move;
+}
+
+/* Drop indicators */
+.drop-into {
+  background: var(--bg-drop-target) !important;
+}
+
+.drop-before {
+  position: relative;
+}
+
+.drop-before::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #4285f4;
+  z-index: 1000;
+}
+
+/* Dialog overlay */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20000;
+  backdrop-filter: blur(2px);
+}
+
+/* Dialog */
+.dialog {
+  position: fixed;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  min-width: 300px;
+  max-width: 400px;
+  padding: 20px;
+  animation: dialogFadeIn 0.15s ease-out;
+}
+
+@keyframes dialogFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dialog-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.dialog-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  outline: none;
+  transition: border-color 0.15s;
+  margin-bottom: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.dialog-input:focus {
+  border-color: #4285f4;
+}
+
+.dialog-message {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.dialog-warning {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.dialog-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  outline: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.dialog-btn-cancel {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.dialog-btn-cancel:hover {
+  background: var(--bg-hover);
+}
+
+.dialog-btn-cancel:active {
+  background: var(--bg-active);
+}
+
+.dialog-btn-primary {
+  background: #4285f4;
+  color: #ffffff;
+}
+
+.dialog-btn-primary:hover {
+  background: #3367d6;
+}
+
+.dialog-btn-primary:active {
+  background: #2a56c6;
+}
+
+.dialog-btn-danger {
+  background: #d32f2f;
+  color: #ffffff;
+}
+
+.dialog-btn-danger:hover {
+  background: #b71c1c;
+}
+
+.dialog-btn-danger:active {
+  background: #a01010;
+}
